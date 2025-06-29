@@ -6,7 +6,7 @@ import { POLAND_BOUNDS, TEMPERATURE_COLORS } from './config.js';
 
 // Prosty generator liczb losowych z seed
 class SeededRandom {
-  constructor(seed = 12345) {
+  constructor(seed = 0) {
     this.seed = seed;
   }
 
@@ -35,15 +35,11 @@ export const getRandomTemperature = () => Math.round(seededRandom.next() * 100);
 
 // Funkcja do określania koloru na podstawie temperatury
 export const getColorByTemperature = temp => {
-  // Sprawdź czy temp to liczba
   if (typeof temp !== 'number' || isNaN(temp) || !isFinite(temp)) {
     return 'rgba(0,0,0,0)';
   }
-  // Clamp temperatura do zakresu 0 do 100°C
-  const clampedTemp = Math.max(0, Math.min(100, temp));
 
-  // Znajdź odpowiedni przedział
-  let startColor, endColor, startTemp, endTemp;
+  const clampedTemp = Math.max(0, Math.min(100, temp));
 
   if (clampedTemp <= TEMPERATURE_COLORS[0].temp) {
     return `rgb(${TEMPERATURE_COLORS[0].color.join(',')})`;
@@ -54,23 +50,17 @@ export const getColorByTemperature = temp => {
   }
 
   for (let i = 0; i < TEMPERATURE_COLORS.length - 1; i++) {
-    if (
-      clampedTemp >= TEMPERATURE_COLORS[i].temp &&
-      clampedTemp <= TEMPERATURE_COLORS[i + 1].temp
-    ) {
-      startColor = TEMPERATURE_COLORS[i].color;
-      endColor = TEMPERATURE_COLORS[i + 1].color;
-      startTemp = TEMPERATURE_COLORS[i].temp;
-      endTemp = TEMPERATURE_COLORS[i + 1].temp;
-      break;
+    const current = TEMPERATURE_COLORS[i];
+    const next = TEMPERATURE_COLORS[i + 1];
+
+    if (clampedTemp >= current.temp && clampedTemp <= next.temp) {
+      const ratio = (clampedTemp - current.temp) / (next.temp - current.temp);
+      const interpolatedColor = current.color.map((start, index) =>
+        Math.round(start + (next.color[index] - start) * ratio)
+      );
+      return `rgb(${interpolatedColor.join(',')})`;
     }
   }
 
-  // Interpoluj kolor
-  const ratio = (clampedTemp - startTemp) / (endTemp - startTemp);
-  const interpolatedColor = startColor.map((start, index) =>
-    Math.round(start + (endColor[index] - start) * ratio)
-  );
-
-  return `rgb(${interpolatedColor.join(',')})`;
+  return 'rgba(0,0,0,0)';
 };

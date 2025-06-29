@@ -28,7 +28,7 @@ export const generateGeoTIFF = async (grid, rows, cols, bounds) => {
     const arrayBuffer = await GeoTIFF.writeArrayBuffer(values, metadata);
     return new Blob([arrayBuffer], { type: 'image/tiff' });
   } catch (error) {
-    console.error('Błąd w generateGeoTIFF:', error);
+    console.error('Error generating GeoTIFF:', error);
     return null;
   }
 };

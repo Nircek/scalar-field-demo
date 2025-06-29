@@ -21,7 +21,7 @@ export const createGeoTIFFLayer = async blob => {
 
     return geotiffLayer;
   } catch (error) {
-    console.warn('Nie udało się utworzyć warstwy GeoTIFF:', error);
+    console.warn('Failed to create GeoTIFF layer:', error);
     return null;
   }
 };
@@ -31,11 +31,11 @@ export const downloadGeoTIFF = (blob, filename = 'temperatura_polska.tiff') => {
   if (!blob) return;
 
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
   URL.revokeObjectURL(url);
 };

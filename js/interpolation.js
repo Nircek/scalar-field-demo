@@ -1,22 +1,22 @@
 // Funkcja do interpolacji temperatury z wygładzaniem
 export const interpolateTemperature = (lat, lng, points, numNeighbors = 5) => {
-  const distances = points.map(p => ({
-    point: p,
-    distance: Math.hypot(lat - p.lat, lng - p.lng),
+  const distances = points.map(point => ({
+    point,
+    distance: Math.hypot(lat - point.lat, lng - point.lng),
   }));
 
   distances.sort((a, b) => a.distance - b.distance);
   const nearest = distances.slice(0, numNeighbors);
 
-  if (nearest.at(0)?.distance < 0.1) {
-    return nearest.at(0).point.temp;
+  if (nearest[0]?.distance < 0.1) {
+    return nearest[0].point.temp;
   }
 
   const { totalWeight, weightedSum } = nearest.reduce(
-    (acc, n) => {
-      const weight = 1 / (n.distance + 0.1);
+    (acc, { point, distance }) => {
+      const weight = 1 / (distance + 0.1);
       acc.totalWeight += weight;
-      acc.weightedSum += n.point.temp * weight;
+      acc.weightedSum += point.temp * weight;
       return acc;
     },
     { totalWeight: 0, weightedSum: 0 }

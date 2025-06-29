@@ -60,8 +60,8 @@ export const initializeMap = () => {
   });
 
   // Wyświetl oryginalne punkty jako większe markery
-  basePoints.forEach(p => {
-    const marker = createTemperatureMarker(p.lat, p.lng, p.temp, {
+  basePoints.forEach(point => {
+    const marker = createTemperatureMarker(point.lat, point.lng, point.temp, {
       radius: 6,
       weight: 2,
       fillOpacity: 1,
@@ -153,7 +153,7 @@ export const initializeMap = () => {
       }
     })
     .catch(error => {
-      console.warn('Nie udało się utworzyć GeoTIFF:', error);
+      console.warn('Failed to create GeoTIFF:', error);
     });
 
   // Obsługa przycisku pobierania GeoTIFF
