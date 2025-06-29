@@ -1,13 +1,17 @@
 import { getColorByTemperature } from './utils.js';
 
-// Funkcja do tworzenia warstwy GeoTIFF
+/**
+ * Creates a GeoTIFF layer for Leaflet from a Blob.
+ * @param {Blob} blob - The GeoTIFF Blob.
+ * @returns {Promise<GeoRasterLayer|null>} A promise that resolves to a GeoRasterLayer or null if creation fails.
+ */
 export const createGeoTIFFLayer = async blob => {
   try {
     const arrayBuffer = await blob.arrayBuffer();
     const georaster = await parseGeoraster(arrayBuffer);
 
     const geotiffLayer = new GeoRasterLayer({
-      attribution: 'Temperatura w Polsce',
+      attribution: 'Temperature in Poland',
       debugLevel: 0,
       georaster,
       opacity: 0.7,
@@ -26,8 +30,12 @@ export const createGeoTIFFLayer = async blob => {
   }
 };
 
-// Funkcja do pobierania pliku GeoTIFF
-export const downloadGeoTIFF = (blob, filename = 'temperatura_polska.tiff') => {
+/**
+ * Triggers download of a GeoTIFF Blob as a file.
+ * @param {Blob} blob - The GeoTIFF Blob to download.
+ * @param {string} [filename='temperature_poland.tiff'] - The filename for the downloaded file.
+ */
+export const downloadGeoTIFF = (blob, filename = 'temperature_poland.tiff') => {
   if (!blob) return;
 
   const url = URL.createObjectURL(blob);

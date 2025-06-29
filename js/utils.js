@@ -1,25 +1,32 @@
-// ⚠️ UWAGA: NIE EDYTOWAĆ LOGIKI GENEROWANIA PUNKTÓW BAZOWYCH I TEMPERATUR!
-// Punkty i temperatury są deterministyczne (seed=0) i generowane poprawnie.
-// Zmiana tej logiki może zepsuć spójność danych, testy i eksport GeoTIFF.
-
 import { POLAND_BOUNDS, TEMPERATURE_COLORS } from './config.js';
 
-// Prosty generator liczb losowych z seed
+/**
+ * Seeded random number generator.
+ */
 class SeededRandom {
+  /**
+   * @param {number} seed - Initial seed value.
+   */
   constructor(seed = 0) {
     this.seed = seed;
   }
-
+  /**
+   * Returns the next random number in [0, 1).
+   * @returns {number}
+   */
   next() {
     this.seed = (this.seed * 9301 + 49297) % 233280;
     return this.seed / 233280;
   }
 }
 
-// Globalny generator z ustalonym seed
+// Global generator with fixed seed
 const seededRandom = new SeededRandom(0);
 
-// Funkcja do generowania losowych punktów w Europie
+/**
+ * Generates a random point within the bounds of Poland.
+ * @returns {[number, number]} [latitude, longitude]
+ */
 export const getRandomPointInPoland = () => {
   const lat =
     POLAND_BOUNDS.lat.min +
@@ -30,22 +37,27 @@ export const getRandomPointInPoland = () => {
   return [lat, lng];
 };
 
-// Funkcja do generowania losowej temperatury (0 do 100°C)
+/**
+ * Generates a random temperature between 0 and 100°C.
+ * @returns {number}
+ */
 export const getRandomTemperature = () => Math.round(seededRandom.next() * 100);
 
-// Funkcja do określania koloru na podstawie temperatury
+/**
+ * Returns a color string for a given temperature value.
+ * @param {number} temp - Temperature value (0-100).
+ * @returns {string} CSS rgb color string.
+ */
 export const getColorByTemperature = temp => {
   if (typeof temp !== 'number' || isNaN(temp) || !isFinite(temp)) {
     return 'rgba(0,0,0,0)';
   }
 
-  const clampedTemp = Math.max(0, Math.min(100, temp));
-
-  if (clampedTemp <= TEMPERATURE_COLORS[0].temp) {
+  if (temp <= TEMPERATURE_COLORS[0].temp) {
     return `rgb(${TEMPERATURE_COLORS[0].color.join(',')})`;
   }
 
-  if (clampedTemp >= TEMPERATURE_COLORS.at(-1).temp) {
+  if (temp >= TEMPERATURE_COLORS.at(-1).temp) {
     return `rgb(${TEMPERATURE_COLORS.at(-1).color.join(',')})`;
   }
 
@@ -53,8 +65,8 @@ export const getColorByTemperature = temp => {
     const current = TEMPERATURE_COLORS[i];
     const next = TEMPERATURE_COLORS[i + 1];
 
-    if (clampedTemp >= current.temp && clampedTemp <= next.temp) {
-      const ratio = (clampedTemp - current.temp) / (next.temp - current.temp);
+    if (temp >= current.temp && temp <= next.temp) {
+      const ratio = (temp - current.temp) / (next.temp - current.temp);
       const interpolatedColor = current.color.map((start, index) =>
         Math.round(start + (next.color[index] - start) * ratio)
       );

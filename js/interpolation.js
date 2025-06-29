@@ -1,4 +1,11 @@
-// Funkcja do interpolacji temperatury z wygładzaniem
+/**
+ * Interpolates temperature at a given point using nearest neighbors with smoothing.
+ * @param {number} lat - Latitude of the point.
+ * @param {number} lng - Longitude of the point.
+ * @param {{lat: number, lng: number, temp: number}[]} points - Array of base points with temperature.
+ * @param {number} [numNeighbors=5] - Number of neighbors to use for interpolation.
+ * @returns {number} Interpolated temperature value.
+ */
 export const interpolateTemperature = (lat, lng, points, numNeighbors = 5) => {
   const distances = points.map(point => ({
     point,
@@ -25,7 +32,16 @@ export const interpolateTemperature = (lat, lng, points, numNeighbors = 5) => {
   return Math.round(weightedSum / totalWeight);
 };
 
-// Funkcja do obliczania temperatury w punkcie siatki
+/**
+ * Calculates the temperature at a grid point using interpolation.
+ * @param {number} i - Row index.
+ * @param {number} j - Column index.
+ * @param {{lat: number, lng: number, temp: number}[]} basePoints - Array of base points.
+ * @param {{lat: {min: number, max: number}, lng: {min: number, max: number}}} bounds - Geographic bounds.
+ * @param {number} rows - Number of rows in the grid.
+ * @param {number} cols - Number of columns in the grid.
+ * @returns {number} Interpolated temperature value at the grid point.
+ */
 export const getGridPointTemperature = (
   i,
   j,

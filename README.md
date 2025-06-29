@@ -1,19 +1,21 @@
-# Mapa Temperatur w Polsce
+# Temperature Map of Poland
 
-Interaktywna aplikacja webowa wyświetlająca mapę temperatur w Polsce z wykorzystaniem biblioteki Leaflet.
+An interactive web application displaying a temperature map of Poland using the Leaflet library.
 
-## Funkcjonalności
+**Note:** This project is best experienced and maintained using [Cursor](https://www.cursor.so/), an AI-powered code editor.
 
-- **OpenStreetMap** jako podkład mapowy
-- **Interaktywna mapa** z możliwością zoomowania i przesuwania
-- **100 deterministycznych punktów** z temperaturą w zakresie 0°C do 100°C
-- **Interpolacja temperatury** metodą najbliższych sąsiadów (5 punktów)
-- **Siatka 200x200 punktów** (40 000 punktów) z interpolowanymi temperaturami
-- **Kolorowe markery** z płynnymi przejściami kolorów zależne od temperatury
-- **Panel kontrolny** w prawym górnym rogu mapy
-- **Eksport danych** do formatu GeoTIFF
+## Features
 
-## Uruchomienie
+- **OpenStreetMap** as the map base layer
+- **Interactive map** with zoom and pan capabilities
+- **100 deterministic points** with temperatures ranging from 0°C to 100°C
+- **Temperature interpolation** using the nearest neighbors method (5 points)
+- **200x200 grid** (40,000 points) with interpolated temperatures
+- **Colorful markers** with smooth color transitions based on temperature
+- **Control panel** in the top right corner of the map
+- **Data export** to GeoTIFF format
+
+## Getting Started
 
 ### Development
 ```bash
@@ -21,7 +23,7 @@ npm install
 npm run dev
 ```
 
-Następnie otwórz `http://localhost:3000` w przeglądarce.
+Then open `http://localhost:3000` in your browser.
 
 ### Production Build
 ```bash
@@ -29,55 +31,24 @@ npm run build
 npm run preview
 ```
 
-Zbudowane pliki znajdziesz w katalogu `dist/`.
+The built files can be found in the `dist/` directory.
 
-## Technologie
+## Technologies
 
-- **HTML5** - struktura aplikacji
-- **CSS3** - stylowanie i responsywność
-- **JavaScript (ES2022)** - logika aplikacji z modułami ES6
-- **Vite** - bundler i dev server
-- **Leaflet** - biblioteka mapowa
-- **GeoTIFF.js** - generowanie plików GeoTIFF
-- **georaster-layer-for-leaflet** - wyświetlanie warstw GeoTIFF
+- **HTML5** - application structure
+- **CSS3** - styling and responsiveness
+- **JavaScript (ES2022)** - application logic with ES6 modules
+- **Vite** - bundler and dev server
+- **Leaflet** - mapping library
+- **GeoTIFF.js** - GeoTIFF file generation
+- **georaster-layer-for-leaflet** - displaying GeoTIFF layers
 
-## Struktura projektu
+## Global Variables
 
-```
-scalar-field-demo/
-├── index.html          # Główny plik aplikacji
-├── style.css           # Style CSS
-├── main.js             # Główny plik JavaScript
-├── vite.config.js      # Konfiguracja Vite
-├── package.json        # Konfiguracja npm
-├── js/
-│   ├── config.js       # Konfiguracja granic i siatki
-│   ├── utils.js        # Funkcje pomocnicze
-│   ├── interpolation.js # Funkcje interpolacji temperatury
-│   ├── markers.js      # Tworzenie markerów na mapie
-│   ├── geotiff.js      # Generowanie plików GeoTIFF
-│   ├── geotiff-layer.js # Warstwa GeoTIFF na mapie
-│   └── map.js          # Główna logika mapy
-├── dist/               # Zbudowane pliki (generowane)
-└── README.md           # Dokumentacja
-```
+Available in the browser console:
+- `basePoints` - 100 deterministic points with temperature
+- `map` - Leaflet map object
 
-## Deployment
+## License
 
-### GitHub Pages
-1. Zbuduj projekt: `npm run build`
-2. Włącz GitHub Pages w ustawieniach repozytorium
-3. Ustaw źródło na folder `dist/` lub branch `gh-pages`
-
-### Inne platformy
-Zbudowane pliki z katalogu `dist/` można wdrożyć na dowolną platformę hostingową (Netlify, Vercel, etc.).
-
-## Zmienne globalne
-
-W konsoli przeglądarki dostępne są:
-- `basePoints` - 100 deterministycznych punktów z temperaturą
-- `map` - obiekt mapy Leaflet
-
-## Licencja
-
-Projekt wykorzystuje OpenStreetMap, które jest dostępne na licencji Open Data Commons Open Database License (ODbL).
+This project uses OpenStreetMap, which is available under the Open Data Commons Open Database License (ODbL).

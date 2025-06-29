@@ -1,6 +1,13 @@
 import { getColorByTemperature } from './utils.js';
 
-// Funkcja do tworzenia markera temperatury
+/**
+ * Creates a Leaflet circle marker representing a temperature value.
+ * @param {number} lat - Latitude of the marker.
+ * @param {number} lng - Longitude of the marker.
+ * @param {number} temp - Temperature value.
+ * @param {object} [options={}] - Additional marker options.
+ * @returns {L.CircleMarker} Leaflet circle marker.
+ */
 export const createTemperatureMarker = (lat, lng, temp, options = {}) => {
   const defaultOptions = {
     radius: 8,
@@ -16,7 +23,7 @@ export const createTemperatureMarker = (lat, lng, temp, options = {}) => {
 
   if (options.showPopup !== false) {
     marker.bindPopup(
-      `Temperatura: <b>${temp}°C</b><br>Lat: ${lat.toFixed(2)}, Lng: ${lng.toFixed(2)}`
+      `Temperature: <b>${temp}°C</b><br>Lat: ${lat.toFixed(2)}, Lng: ${lng.toFixed(2)}`
     );
   }
 
