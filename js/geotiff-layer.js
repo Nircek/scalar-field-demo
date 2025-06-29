@@ -7,11 +7,10 @@ export const createGeoTIFFLayer = async blob => {
     const georaster = await parseGeoraster(arrayBuffer);
 
     const geotiffLayer = new GeoRasterLayer({
-      attribution: 'Temperatura w Europie',
+      attribution: 'Temperatura w Polsce',
       debugLevel: 0,
       georaster,
       opacity: 0.7,
-      resampleMethod: 'bilinear',
       pixelValuesToColorFn: values => {
         const temp = values[0];
         if (temp === undefined || temp === null) return 'transparent';
@@ -28,7 +27,7 @@ export const createGeoTIFFLayer = async blob => {
 };
 
 // Funkcja do pobierania pliku GeoTIFF
-export const downloadGeoTIFF = (blob, filename = 'temperatura_europa.tiff') => {
+export const downloadGeoTIFF = (blob, filename = 'temperatura_polska.tiff') => {
   if (!blob) return;
 
   const url = URL.createObjectURL(blob);

@@ -1,7 +1,7 @@
 // Konfiguracja granic Europy
-export const EUROPE_BOUNDS = {
-  lat: { min: 35, max: 70 },
-  lng: { min: -10, max: 40 },
+export const POLAND_BOUNDS = {
+  lat: { min: 49, max: 55 },
+  lng: { min: 14, max: 24 },
 };
 
 // Konfiguracja siatki

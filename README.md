@@ -1,6 +1,6 @@
-# Mapa Temperatur w Europie
+# Mapa Temperatur w Polsce
 
-Interaktywna aplikacja webowa wyświetlająca mapę temperatur w Europie z wykorzystaniem biblioteki Leaflet.
+Interaktywna aplikacja webowa wyświetlająca mapę temperatur w Polsce z wykorzystaniem biblioteki Leaflet.
 
 ## Funkcjonalności
 

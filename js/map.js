@@ -2,9 +2,9 @@
 // Logika generowania siatki, warstw i ich wyświetlania jest poprawna i powiązana z eksportem GeoTIFF.
 // Zmiana tej logiki może zepsuć spójność danych, testy i eksport GeoTIFF.
 
-import { EUROPE_BOUNDS, GRID_CONFIG } from './config.js';
+import { POLAND_BOUNDS, GRID_CONFIG } from './config.js';
 import {
-  getRandomPointInEurope,
+  getRandomPointInPoland,
   getRandomTemperature,
   getColorByTemperature,
 } from './utils.js';
@@ -17,7 +17,7 @@ import { createTemperatureLegend } from './legend.js';
 // Główna funkcja inicjalizująca
 export const initializeMap = () => {
   // Inicjalizacja mapy
-  const map = L.map('map').setView([52, 15], 4);
+  const map = L.map('map').setView([52, 19], 6);
 
   // Dodaj warstwę OpenStreetMap
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -34,11 +34,11 @@ export const initializeMap = () => {
       .openOn(map);
   });
 
-  // Dodaj prostokąt z granicami Europy
-  const europeBorder = L.rectangle(
+  // Dodaj prostokąt z granicami Polski
+  const polandBorder = L.rectangle(
     [
-      [EUROPE_BOUNDS.lat.min, EUROPE_BOUNDS.lng.min],
-      [EUROPE_BOUNDS.lat.max, EUROPE_BOUNDS.lng.max],
+      [POLAND_BOUNDS.lat.min, POLAND_BOUNDS.lng.min],
+      [POLAND_BOUNDS.lat.max, POLAND_BOUNDS.lng.max],
     ],
     {
       color: '#000000',
@@ -55,7 +55,7 @@ export const initializeMap = () => {
 
   // Generuj 100 losowych punktów z temperaturą
   const basePoints = Array.from({ length: 100 }, () => {
-    const [lat, lng] = getRandomPointInEurope();
+    const [lat, lng] = getRandomPointInPoland();
     const temp = getRandomTemperature();
     return { lat, lng, temp };
   });
@@ -63,7 +63,7 @@ export const initializeMap = () => {
   // Wyświetl oryginalne punkty jako większe markery
   basePoints.forEach(p => {
     const marker = createTemperatureMarker(p.lat, p.lng, p.temp, {
-      radius: 10,
+      radius: 6,
       weight: 2,
       fillOpacity: 1,
     });
@@ -72,20 +72,20 @@ export const initializeMap = () => {
 
   // Generuj siatkę punktów
   const latStep =
-    (EUROPE_BOUNDS.lat.max - EUROPE_BOUNDS.lat.min) / (GRID_CONFIG.rows - 1);
+    (POLAND_BOUNDS.lat.max - POLAND_BOUNDS.lat.min) / (GRID_CONFIG.rows - 1);
   const lngStep =
-    (EUROPE_BOUNDS.lng.max - EUROPE_BOUNDS.lng.min) / (GRID_CONFIG.cols - 1);
+    (POLAND_BOUNDS.lng.max - POLAND_BOUNDS.lng.min) / (GRID_CONFIG.cols - 1);
 
   // Generuj dane siatki dla GeoTIFF
   const gridData = Array.from({ length: GRID_CONFIG.rows }, (_, i) =>
     Array.from({ length: GRID_CONFIG.cols }, (_, j) => {
-      const lat = EUROPE_BOUNDS.lat.min + i * latStep;
-      const lng = EUROPE_BOUNDS.lng.min + j * lngStep;
+      const lat = POLAND_BOUNDS.lat.min + i * latStep;
+      const lng = POLAND_BOUNDS.lng.min + j * lngStep;
       const temp = getGridPointTemperature(
         i,
         j,
         basePoints,
-        EUROPE_BOUNDS,
+        POLAND_BOUNDS,
         GRID_CONFIG.rows,
         GRID_CONFIG.cols
       );
@@ -110,7 +110,7 @@ export const initializeMap = () => {
 
   // Dodaj kontrolki warstw
   const overlays = {
-    'Granice Europy': europeBorder,
+    'Granice Polski': polandBorder,
     'Punkty bazowe (100)': baseLayerGroup,
     'Siatka interpolowana (40k)': gridLayerGroup,
   };
@@ -127,7 +127,7 @@ export const initializeMap = () => {
   let geotiffBlob = null;
   let geotiffLayer = null;
 
-  generateGeoTIFF(gridData, GRID_CONFIG.rows, GRID_CONFIG.cols, EUROPE_BOUNDS)
+  generateGeoTIFF(gridData, GRID_CONFIG.rows, GRID_CONFIG.cols, POLAND_BOUNDS)
     .then(async blob => {
       if (blob) {
         geotiffBlob = blob;

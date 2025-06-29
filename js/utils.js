@@ -2,7 +2,7 @@
 // Punkty i temperatury są deterministyczne (seed=0) i generowane poprawnie.
 // Zmiana tej logiki może zepsuć spójność danych, testy i eksport GeoTIFF.
 
-import { EUROPE_BOUNDS, TEMPERATURE_COLORS } from './config.js';
+import { POLAND_BOUNDS, TEMPERATURE_COLORS } from './config.js';
 
 // Prosty generator liczb losowych z seed
 class SeededRandom {
@@ -20,13 +20,13 @@ class SeededRandom {
 const seededRandom = new SeededRandom(0);
 
 // Funkcja do generowania losowych punktów w Europie
-export const getRandomPointInEurope = () => {
+export const getRandomPointInPoland = () => {
   const lat =
-    EUROPE_BOUNDS.lat.min +
-    seededRandom.next() * (EUROPE_BOUNDS.lat.max - EUROPE_BOUNDS.lat.min);
+    POLAND_BOUNDS.lat.min +
+    seededRandom.next() * (POLAND_BOUNDS.lat.max - POLAND_BOUNDS.lat.min);
   const lng =
-    EUROPE_BOUNDS.lng.min +
-    seededRandom.next() * (EUROPE_BOUNDS.lng.max - EUROPE_BOUNDS.lng.min);
+    POLAND_BOUNDS.lng.min +
+    seededRandom.next() * (POLAND_BOUNDS.lng.max - POLAND_BOUNDS.lng.min);
   return [lat, lng];
 };
 

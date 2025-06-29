@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
     res.json({ 
         status: 'OK', 
-        message: 'Mapa temperatur w Europie działa poprawnie',
+        message: 'Mapa temperatur w Polsce działa poprawnie',
         timestamp: new Date().toISOString()
     });
 });
