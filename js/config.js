@@ -19,16 +19,3 @@ export const TEMPERATURE_COLORS = [
   { temp: 80, color: [231, 76, 60] }, // czerwony
   { temp: 100, color: [192, 57, 43] }, // ciemny czerwony
 ];
-
-// Konfiguracja legendy
-export const LEGEND_CONFIG = {
-  grades: [0, 20, 40, 60, 80, 100],
-  title: 'Temperatura (°C)',
-  styles: {
-    backgroundColor: 'white',
-    padding: '10px',
-    borderRadius: '5px',
-    boxShadow: '0 0 15px rgba(0,0,0,0.2)',
-    fontSize: '12px',
-  },
-};

@@ -12,7 +12,6 @@ import { getGridPointTemperature } from './interpolation.js';
 import { createTemperatureMarker } from './markers.js';
 import { generateGeoTIFF } from './geotiff.js';
 import { createGeoTIFFLayer, downloadGeoTIFF } from './geotiff-layer.js';
-import { createTemperatureLegend } from './legend.js';
 
 // Główna funkcja inicjalizująca
 export const initializeMap = () => {
@@ -118,7 +117,7 @@ export const initializeMap = () => {
   // Dodaj kontrolki warstw do mapy
   const layerControl = L.control
     .layers(null, overlays, {
-      collapsed: false,
+      collapsed: true,
       position: 'topright',
     })
     .addTo(map);
@@ -146,7 +145,7 @@ export const initializeMap = () => {
           layerControl.remove();
           L.control
             .layers(null, overlays, {
-              collapsed: false,
+              collapsed: true,
               position: 'topright',
             })
             .addTo(map);
@@ -161,10 +160,6 @@ export const initializeMap = () => {
   document.getElementById('downloadGeoTIFF').addEventListener('click', () => {
     downloadGeoTIFF(geotiffBlob);
   });
-
-  // Dodaj legendę temperatury
-  const legend = createTemperatureLegend();
-  legend.addTo(map);
 
   // Udostępnij dane globalnie dla konsoli
   window.basePoints = basePoints;

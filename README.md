@@ -49,7 +49,6 @@ scaler-field-demo/
 │   ├── markers.js      # Tworzenie markerów na mapie
 │   ├── geotiff.js      # Generowanie plików GeoTIFF
 │   ├── geotiff-layer.js # Warstwa GeoTIFF na mapie
-│   ├── legend.js       # Tworzenie legendy
 │   └── map.js          # Główna logika mapy
 └── README.md           # Dokumentacja
 ```
