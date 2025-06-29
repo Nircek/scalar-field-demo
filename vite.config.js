@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   // Base path for GitHub Pages (if deploying to a subdirectory)
-  // base: '/scalar-field-demo/',
+  base: '/scalar-field-demo/',
   
   // Build configuration
   build: {
