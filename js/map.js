@@ -122,7 +122,7 @@ export const initializeMap = () => {
         if (geotiffLayer) {
           // Dodaj warstwę GeoTIFF do kontroli warstw
           overlays['Warstwa GeoTIFF'] = geotiffLayer;
-          
+
           // Odśwież kontrolki warstw
           layerControl.remove();
           L.control.layers(null, overlays, {

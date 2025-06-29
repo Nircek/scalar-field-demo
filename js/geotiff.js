@@ -9,7 +9,7 @@ export const generateGeoTIFF = async (grid, rows, cols, bounds) => {
     const pixelWidth = (bounds.lng.max - bounds.lng.min) / cols;
     const pixelHeight = (bounds.lat.max - bounds.lat.min) / rows;
 
-    const values = grid.slice().reverse().flat(); // flatten 2D to 1D (row-major)
+    const values = grid.slice().reverse().flat();
 
     const metadata = {
       height: rows,

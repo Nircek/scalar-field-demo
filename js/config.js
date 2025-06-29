@@ -12,17 +12,17 @@ export const GRID_CONFIG = {
 
 // Konfiguracja kolorów temperatury
 export const TEMPERATURE_COLORS = [
-  { temp: -10, color: [52, 152, 219] },   // niebieski
-  { temp: 0, color: [46, 204, 113] },     // zielony
-  { temp: 10, color: [241, 196, 15] },    // żółty
-  { temp: 20, color: [230, 126, 34] },    // pomarańczowy
-  { temp: 30, color: [231, 76, 60] },     // czerwony
-  { temp: 40, color: [192, 57, 43] }      // ciemny czerwony
+  { temp: 0, color: [52, 152, 219] },    // niebieski
+  { temp: 20, color: [46, 204, 113] },   // zielony
+  { temp: 40, color: [241, 196, 15] },   // żółty
+  { temp: 60, color: [230, 126, 34] },   // pomarańczowy
+  { temp: 80, color: [231, 76, 60] },    // czerwony
+  { temp: 100, color: [192, 57, 43] }    // ciemny czerwony
 ];
 
 // Konfiguracja legendy
 export const LEGEND_CONFIG = {
-  grades: [-10, 0, 10, 20, 30, 40],
+  grades: [0, 20, 40, 60, 80, 100],
   title: 'Temperatura (°C)',
   styles: {
     backgroundColor: 'white',

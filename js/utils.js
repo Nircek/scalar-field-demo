@@ -26,24 +26,31 @@ export const getRandomPointInEurope = () => {
   return [lat, lng];
 };
 
-// Funkcja do generowania losowej temperatury (-10 do 40°C)
-export const getRandomTemperature = () => Math.round(-10 + seededRandom.next() * 50);
+// Funkcja do generowania losowej temperatury (0 do 100°C)
+export const getRandomTemperature = () => Math.round(seededRandom.next() * 100);
 
 // Funkcja do określania koloru na podstawie temperatury
 export const getColorByTemperature = (temp) => {
+  // Sprawdź czy temp to liczba
+  if (typeof temp !== 'number' || isNaN(temp) || !isFinite(temp)) {
+    return 'rgba(0,0,0,0)';
+  }
+  // Clamp temperatura do zakresu 0 do 100°C
+  const clampedTemp = Math.max(0, Math.min(100, temp));
+
   // Znajdź odpowiedni przedział
   let startColor, endColor, startTemp, endTemp;
 
-  if (temp <= TEMPERATURE_COLORS[0].temp) {
+  if (clampedTemp <= TEMPERATURE_COLORS[0].temp) {
     return `rgb(${TEMPERATURE_COLORS[0].color.join(',')})`;
   }
 
-  if (temp >= TEMPERATURE_COLORS.at(-1).temp) {
+  if (clampedTemp >= TEMPERATURE_COLORS.at(-1).temp) {
     return `rgb(${TEMPERATURE_COLORS.at(-1).color.join(',')})`;
   }
 
   for (let i = 0; i < TEMPERATURE_COLORS.length - 1; i++) {
-    if (temp >= TEMPERATURE_COLORS[i].temp && temp <= TEMPERATURE_COLORS[i + 1].temp) {
+    if (clampedTemp >= TEMPERATURE_COLORS[i].temp && clampedTemp <= TEMPERATURE_COLORS[i + 1].temp) {
       startColor = TEMPERATURE_COLORS[i].color;
       endColor = TEMPERATURE_COLORS[i + 1].color;
       startTemp = TEMPERATURE_COLORS[i].temp;
@@ -53,7 +60,7 @@ export const getColorByTemperature = (temp) => {
   }
 
   // Interpoluj kolor
-  const ratio = (temp - startTemp) / (endTemp - startTemp);
+  const ratio = (clampedTemp - startTemp) / (endTemp - startTemp);
   const interpolatedColor = startColor.map((start, index) =>
     Math.round(start + (endColor[index] - start) * ratio)
   );

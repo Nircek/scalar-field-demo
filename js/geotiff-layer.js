@@ -8,17 +8,21 @@ export const createGeoTIFFLayer = async (blob) => {
     console.log('georaster:', georaster);
 
     const geotiffLayer = new GeoRasterLayer({
+      attribution: 'Temperatura w Europie',
+      debugLevel: 0,
       georaster,
       opacity: 0.7,
+      resampleMethod: 'bilinear',
       pixelValuesToColorFn: (values) => {
         const temp = values[0];
         if (temp === undefined || temp === null) return 'transparent';
+        
         return getColorByTemperature(temp);
       },
-      resolution: 64
+      resolution: 2048
     });
 
-    console.log('✅ Warstwa GeoTIFF została utworzona');
+    console.log('✅ Warstwa GeoTIFF została utworzona z interpolacją kolorów');
     return geotiffLayer;
   } catch (error) {
     console.warn('Nie udało się utworzyć warstwy GeoTIFF:', error);
