@@ -3,7 +3,11 @@
 // Zmiana tej logiki może zepsuć spójność danych, testy i eksport GeoTIFF.
 
 import { EUROPE_BOUNDS, GRID_CONFIG } from './config.js';
-import { getRandomPointInEurope, getRandomTemperature, getColorByTemperature } from './utils.js';
+import {
+  getRandomPointInEurope,
+  getRandomTemperature,
+  getColorByTemperature,
+} from './utils.js';
 import { getGridPointTemperature } from './interpolation.js';
 import { createTemperatureMarker } from './markers.js';
 import { generateGeoTIFF } from './geotiff.js';
@@ -17,11 +21,12 @@ export const initializeMap = () => {
 
   // Dodaj warstwę OpenStreetMap
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
 
   // Dodaj funkcjonalność kliknięcia na mapę
-  map.on('click', (e) => {
+  map.on('click', e => {
     const { lat, lng } = e.latlng;
     L.popup()
       .setLatLng(e.latlng)
@@ -30,16 +35,19 @@ export const initializeMap = () => {
   });
 
   // Dodaj prostokąt z granicami Europy
-  const europeBorder = L.rectangle([
-    [EUROPE_BOUNDS.lat.min, EUROPE_BOUNDS.lng.min],
-    [EUROPE_BOUNDS.lat.max, EUROPE_BOUNDS.lng.max]
-  ], {
-    color: '#000000',
-    weight: 2,
-    fillColor: 'transparent',
-    fillOpacity: 0,
-    opacity: 1
-  }).addTo(map);
+  const europeBorder = L.rectangle(
+    [
+      [EUROPE_BOUNDS.lat.min, EUROPE_BOUNDS.lng.min],
+      [EUROPE_BOUNDS.lat.max, EUROPE_BOUNDS.lng.max],
+    ],
+    {
+      color: '#000000',
+      weight: 2,
+      fillColor: 'transparent',
+      fillOpacity: 0,
+      opacity: 1,
+    }
+  ).addTo(map);
 
   // Tworzenie warstw
   const baseLayerGroup = L.layerGroup();
@@ -57,21 +65,30 @@ export const initializeMap = () => {
     const marker = createTemperatureMarker(p.lat, p.lng, p.temp, {
       radius: 10,
       weight: 2,
-      fillOpacity: 1
+      fillOpacity: 1,
     });
     baseLayerGroup.addLayer(marker);
   });
 
   // Generuj siatkę punktów
-  const latStep = (EUROPE_BOUNDS.lat.max - EUROPE_BOUNDS.lat.min) / (GRID_CONFIG.rows - 1);
-  const lngStep = (EUROPE_BOUNDS.lng.max - EUROPE_BOUNDS.lng.min) / (GRID_CONFIG.cols - 1);
+  const latStep =
+    (EUROPE_BOUNDS.lat.max - EUROPE_BOUNDS.lat.min) / (GRID_CONFIG.rows - 1);
+  const lngStep =
+    (EUROPE_BOUNDS.lng.max - EUROPE_BOUNDS.lng.min) / (GRID_CONFIG.cols - 1);
 
   // Generuj dane siatki dla GeoTIFF
   const gridData = Array.from({ length: GRID_CONFIG.rows }, (_, i) =>
     Array.from({ length: GRID_CONFIG.cols }, (_, j) => {
       const lat = EUROPE_BOUNDS.lat.min + i * latStep;
       const lng = EUROPE_BOUNDS.lng.min + j * lngStep;
-      const temp = getGridPointTemperature(i, j, basePoints, EUROPE_BOUNDS, GRID_CONFIG.rows, GRID_CONFIG.cols);
+      const temp = getGridPointTemperature(
+        i,
+        j,
+        basePoints,
+        EUROPE_BOUNDS,
+        GRID_CONFIG.rows,
+        GRID_CONFIG.cols
+      );
 
       // Dodaj marker do istniejącej warstwy siatki
       const marker = createTemperatureMarker(lat, lng, temp, {
@@ -80,7 +97,7 @@ export const initializeMap = () => {
         weight: 0,
         opacity: 0.7,
         fillOpacity: 0.7,
-        showPopup: false
+        showPopup: false,
       });
       gridLayerGroup.addLayer(marker);
 
@@ -95,21 +112,23 @@ export const initializeMap = () => {
   const overlays = {
     'Granice Europy': europeBorder,
     'Punkty bazowe (100)': baseLayerGroup,
-    'Siatka interpolowana (40k)': gridLayerGroup
+    'Siatka interpolowana (40k)': gridLayerGroup,
   };
 
   // Dodaj kontrolki warstw do mapy
-  const layerControl = L.control.layers(null, overlays, {
-    collapsed: false,
-    position: 'topright'
-  }).addTo(map);
+  const layerControl = L.control
+    .layers(null, overlays, {
+      collapsed: false,
+      position: 'topright',
+    })
+    .addTo(map);
 
   // Generuj GeoTIFF
   let geotiffBlob = null;
   let geotiffLayer = null;
 
   generateGeoTIFF(gridData, GRID_CONFIG.rows, GRID_CONFIG.cols, EUROPE_BOUNDS)
-    .then(async (blob) => {
+    .then(async blob => {
       if (blob) {
         geotiffBlob = blob;
         const downloadBtn = document.getElementById('downloadGeoTIFF');
@@ -125,10 +144,12 @@ export const initializeMap = () => {
 
           // Odśwież kontrolki warstw
           layerControl.remove();
-          L.control.layers(null, overlays, {
-            collapsed: false,
-            position: 'topright'
-          }).addTo(map);
+          L.control
+            .layers(null, overlays, {
+              collapsed: false,
+              position: 'topright',
+            })
+            .addTo(map);
         }
       }
     })
@@ -148,10 +169,4 @@ export const initializeMap = () => {
   // Udostępnij dane globalnie dla konsoli
   window.basePoints = basePoints;
   window.map = map;
-
-  console.log('Mapa temperatur w Europie została załadowana!');
-  console.log('Dostępne zmienne globalne:');
-  console.log('- basePoints: 100 losowych punktów z temperaturą');
-  console.log('- map: obiekt mapy Leaflet');
-  console.log('💡 Punkty są generowane z ustalonym seed (0) - zawsze te same przy przeładowaniu');
 };

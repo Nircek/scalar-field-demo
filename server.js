@@ -26,8 +26,5 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Serwer uruchomiony na http://localhost:${PORT}`);
-    console.log(`📁 Serwowane pliki z: ${__dirname}`);
-    console.log(`🔧 Tryb development - bez bundlingu`);
-    console.log(`📊 Health check: http://localhost:${PORT}/health`);
+    console.log(`Serwer uruchomiony na http://localhost:${PORT}`);
 }); 

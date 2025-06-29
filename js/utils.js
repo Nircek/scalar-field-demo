@@ -21,8 +21,12 @@ const seededRandom = new SeededRandom(0);
 
 // Funkcja do generowania losowych punktów w Europie
 export const getRandomPointInEurope = () => {
-  const lat = EUROPE_BOUNDS.lat.min + seededRandom.next() * (EUROPE_BOUNDS.lat.max - EUROPE_BOUNDS.lat.min);
-  const lng = EUROPE_BOUNDS.lng.min + seededRandom.next() * (EUROPE_BOUNDS.lng.max - EUROPE_BOUNDS.lng.min);
+  const lat =
+    EUROPE_BOUNDS.lat.min +
+    seededRandom.next() * (EUROPE_BOUNDS.lat.max - EUROPE_BOUNDS.lat.min);
+  const lng =
+    EUROPE_BOUNDS.lng.min +
+    seededRandom.next() * (EUROPE_BOUNDS.lng.max - EUROPE_BOUNDS.lng.min);
   return [lat, lng];
 };
 
@@ -30,7 +34,7 @@ export const getRandomPointInEurope = () => {
 export const getRandomTemperature = () => Math.round(seededRandom.next() * 100);
 
 // Funkcja do określania koloru na podstawie temperatury
-export const getColorByTemperature = (temp) => {
+export const getColorByTemperature = temp => {
   // Sprawdź czy temp to liczba
   if (typeof temp !== 'number' || isNaN(temp) || !isFinite(temp)) {
     return 'rgba(0,0,0,0)';
@@ -50,7 +54,10 @@ export const getColorByTemperature = (temp) => {
   }
 
   for (let i = 0; i < TEMPERATURE_COLORS.length - 1; i++) {
-    if (clampedTemp >= TEMPERATURE_COLORS[i].temp && clampedTemp <= TEMPERATURE_COLORS[i + 1].temp) {
+    if (
+      clampedTemp >= TEMPERATURE_COLORS[i].temp &&
+      clampedTemp <= TEMPERATURE_COLORS[i + 1].temp
+    ) {
       startColor = TEMPERATURE_COLORS[i].color;
       endColor = TEMPERATURE_COLORS[i + 1].color;
       startTemp = TEMPERATURE_COLORS[i].temp;

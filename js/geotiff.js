@@ -20,9 +20,9 @@ export const generateGeoTIFF = async (grid, rows, cols, bounds) => {
       ModelPixelScale: [pixelWidth, pixelHeight, 0],
 
       // CRS: WGS84
-      GTModelTypeGeoKey: 2,           // Geographic
-      GTRasterTypeGeoKey: 1,          // Pixel is area
-      GeographicTypeGeoKey: 4326      // EPSG:4326
+      GTModelTypeGeoKey: 2, // Geographic
+      GTRasterTypeGeoKey: 1, // Pixel is area
+      GeographicTypeGeoKey: 4326, // EPSG:4326
     };
 
     const arrayBuffer = await GeoTIFF.writeArrayBuffer(values, metadata);
@@ -32,5 +32,3 @@ export const generateGeoTIFF = async (grid, rows, cols, bounds) => {
     return null;
   }
 };
-
-

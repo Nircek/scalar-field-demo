@@ -6,8 +6,6 @@ export const createTemperatureLegend = () => {
 
   legend.onAdd = function () {
     const div = L.DomUtil.create('div', 'info legend');
-
-    // Zastosuj style z konfiguracji
     Object.assign(div.style, LEGEND_CONFIG.styles);
 
     div.innerHTML = `<h4>${LEGEND_CONFIG.title}</h4>`;
