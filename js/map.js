@@ -7,6 +7,8 @@ import { getRandomPointInEurope, getRandomTemperature, getColorByTemperature } f
 import { getGridPointTemperature } from './interpolation.js';
 import { createTemperatureMarker } from './markers.js';
 import { generateGeoTIFF } from './geotiff.js';
+import { createGeoTIFFLayer, downloadGeoTIFF } from './geotiff-layer.js';
+import { createTemperatureLegend } from './legend.js';
 
 // Główna funkcja inicjalizująca
 export const initializeMap = () => {
@@ -21,7 +23,6 @@ export const initializeMap = () => {
   // Dodaj funkcjonalność kliknięcia na mapę
   map.on('click', (e) => {
     const { lat, lng } = e.latlng;
-
     L.popup()
       .setLatLng(e.latlng)
       .setContent(`Współrzędne: <b>${lat.toFixed(6)}, ${lng.toFixed(6)}</b>`)
@@ -89,36 +90,6 @@ export const initializeMap = () => {
 
   // Dodaj warstwy do mapy
   baseLayerGroup.addTo(map);
-  // gridLayerGroup.addTo(map); // Usunięte - siatka domyślnie wyłączona
-
-  // Generuj GeoTIFF
-  let geotiffBlob = null;
-  generateGeoTIFF(gridData, GRID_CONFIG.rows, GRID_CONFIG.cols, EUROPE_BOUNDS)
-    .then((blob) => {
-      if (blob) {
-        geotiffBlob = blob;
-        const downloadBtn = document.getElementById('downloadGeoTIFF');
-        downloadBtn.disabled = false;
-        downloadBtn.textContent = `📥 Pobierz GeoTIFF (${Math.round(blob.size / 1024)} KB)`;
-      }
-    })
-    .catch(error => {
-      console.warn('Nie udało się utworzyć GeoTIFF:', error);
-    });
-
-  // Obsługa przycisku pobierania GeoTIFF
-  document.getElementById('downloadGeoTIFF').addEventListener('click', () => {
-    if (geotiffBlob) {
-      const url = URL.createObjectURL(geotiffBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'temperatura_europa.tiff';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-  });
 
   // Dodaj kontrolki warstw
   const overlays = {
@@ -127,51 +98,51 @@ export const initializeMap = () => {
     'Siatka interpolowana (40k)': gridLayerGroup
   };
 
-  L.control.layers(null, overlays, {
+  // Dodaj kontrolki warstw do mapy
+  const layerControl = L.control.layers(null, overlays, {
     collapsed: false,
     position: 'topright'
   }).addTo(map);
 
-  // Dodaj legendę temperatury
-  const legend = L.control({ position: 'bottomright' });
-  legend.onAdd = function () {
-    const div = L.DomUtil.create('div', 'info legend');
-    div.style.backgroundColor = 'white';
-    div.style.padding = '10px';
-    div.style.borderRadius = '5px';
-    div.style.boxShadow = '0 0 15px rgba(0,0,0,0.2)';
-    div.style.fontSize = '12px';
+  // Generuj GeoTIFF
+  let geotiffBlob = null;
+  let geotiffLayer = null;
 
-    const grades = [-10, 0, 10, 20, 30, 40];
-    const colors = [
-      'rgb(52, 152, 219)',   // niebieski
-      'rgb(46, 204, 113)',   // zielony
-      'rgb(241, 196, 15)',   // żółty
-      'rgb(230, 126, 34)',   // pomarańczowy
-      'rgb(231, 76, 60)',    // czerwony
-      'rgb(192, 57, 43)'     // ciemny czerwony
-    ];
+  generateGeoTIFF(gridData, GRID_CONFIG.rows, GRID_CONFIG.cols, EUROPE_BOUNDS)
+    .then(async (blob) => {
+      if (blob) {
+        geotiffBlob = blob;
+        const downloadBtn = document.getElementById('downloadGeoTIFF');
+        downloadBtn.disabled = false;
+        downloadBtn.textContent = `📥 Pobierz GeoTIFF (${Math.round(blob.size / 1024)} KB)`;
 
-    div.innerHTML = '<h4>Temperatura (°C)</h4>';
+        // Utwórz warstwę GeoTIFF na mapie
+        geotiffLayer = await createGeoTIFFLayer(blob);
 
-    for (let i = 0; i < grades.length; i++) {
-      const color = colors[i];
-      const grade = grades[i];
-      const nextGrade = grades[i + 1];
-
-      if (nextGrade) {
-        div.innerHTML +=
-          `<i style="background:${color}; width:18px; height:18px; float:left; margin-right:8px; opacity:0.8"></i>` +
-          `${grade}°C - ${nextGrade}°C<br>`;
-      } else {
-        div.innerHTML +=
-          `<i style="background:${color}; width:18px; height:18px; float:left; margin-right:8px; opacity:0.8"></i>` +
-          `${grade}°C+<br>`;
+        if (geotiffLayer) {
+          // Dodaj warstwę GeoTIFF do kontroli warstw
+          overlays['Warstwa GeoTIFF'] = geotiffLayer;
+          
+          // Odśwież kontrolki warstw
+          layerControl.remove();
+          L.control.layers(null, overlays, {
+            collapsed: false,
+            position: 'topright'
+          }).addTo(map);
+        }
       }
-    }
+    })
+    .catch(error => {
+      console.warn('Nie udało się utworzyć GeoTIFF:', error);
+    });
 
-    return div;
-  };
+  // Obsługa przycisku pobierania GeoTIFF
+  document.getElementById('downloadGeoTIFF').addEventListener('click', () => {
+    downloadGeoTIFF(geotiffBlob);
+  });
+
+  // Dodaj legendę temperatury
+  const legend = createTemperatureLegend();
   legend.addTo(map);
 
   // Udostępnij dane globalnie dla konsoli

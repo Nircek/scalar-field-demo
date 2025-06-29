@@ -29,6 +29,8 @@
   },
   "globals": {
     "L": "readonly",
-    "GeoTIFF": "readonly"
+    "GeoTIFF": "readonly",
+    "parseGeoraster": "readonly",
+    "GeoRasterLayer": "readonly"
   }
 } 

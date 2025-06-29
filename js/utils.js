@@ -2,7 +2,7 @@
 // Punkty i temperatury są deterministyczne (seed=0) i generowane poprawnie.
 // Zmiana tej logiki może zepsuć spójność danych, testy i eksport GeoTIFF.
 
-import { EUROPE_BOUNDS } from './config.js';
+import { EUROPE_BOUNDS, TEMPERATURE_COLORS } from './config.js';
 
 // Prosty generator liczb losowych z seed
 class SeededRandom {
@@ -31,33 +31,23 @@ export const getRandomTemperature = () => Math.round(-10 + seededRandom.next() *
 
 // Funkcja do określania koloru na podstawie temperatury
 export const getColorByTemperature = (temp) => {
-  // Płynne przejścia kolorów od niebieskiego przez zielony, żółty, pomarańczowy do czerwonego
-  const colors = [
-    { temp: -10, color: [52, 152, 219] },   // niebieski
-    { temp: 0, color: [46, 204, 113] },     // zielony
-    { temp: 10, color: [241, 196, 15] },    // żółty
-    { temp: 20, color: [230, 126, 34] },    // pomarańczowy
-    { temp: 30, color: [231, 76, 60] },     // czerwony
-    { temp: 40, color: [192, 57, 43] }      // ciemny czerwony
-  ];
-
   // Znajdź odpowiedni przedział
   let startColor, endColor, startTemp, endTemp;
 
-  if (temp <= colors[0].temp) {
-    return `rgb(${colors[0].color.join(',')})`;
+  if (temp <= TEMPERATURE_COLORS[0].temp) {
+    return `rgb(${TEMPERATURE_COLORS[0].color.join(',')})`;
   }
 
-  if (temp >= colors.at(-1).temp) {
-    return `rgb(${colors.at(-1).color.join(',')})`;
+  if (temp >= TEMPERATURE_COLORS.at(-1).temp) {
+    return `rgb(${TEMPERATURE_COLORS.at(-1).color.join(',')})`;
   }
 
-  for (let i = 0; i < colors.length - 1; i++) {
-    if (temp >= colors[i].temp && temp <= colors[i + 1].temp) {
-      startColor = colors[i].color;
-      endColor = colors[i + 1].color;
-      startTemp = colors[i].temp;
-      endTemp = colors[i + 1].temp;
+  for (let i = 0; i < TEMPERATURE_COLORS.length - 1; i++) {
+    if (temp >= TEMPERATURE_COLORS[i].temp && temp <= TEMPERATURE_COLORS[i + 1].temp) {
+      startColor = TEMPERATURE_COLORS[i].color;
+      endColor = TEMPERATURE_COLORS[i + 1].color;
+      startTemp = TEMPERATURE_COLORS[i].temp;
+      endTemp = TEMPERATURE_COLORS[i + 1].temp;
       break;
     }
   }
